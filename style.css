@@ -154,12 +154,20 @@ button {
   border: 1px solid red;
   display: none;
   border: none;
-  text-decoration: none;
 }
 
 input {
   position: relative;
   border-radius: 4px;
-  width: 100%;
+  width: 70%;
   padding: 4px;
+}
+
+.card-list {
+  z-index: 99;
+}
+
+.card-list a {
+  z-index: 99;
+  text-decoration: none;
 }
