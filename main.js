@@ -38,16 +38,33 @@ function getJadwalSholat() {
     document.querySelector('.tanggal').textContent = jadwal.tanggal;
   });
 }
-5
-const inputSearch = document.querySelector('.input-search')
-const cardList = document.querySelector('.card-list')
-console.log(inputSearch)
-console.log(cardList)
+
+let inputSearch = document.getElementById('inputSearch')
+const cardList = document.getElementsByClassName('card-list')[0]
 
 
 inputSearch.addEventListener('keyup',function(){
-  const valueSearch = inputSearch.value;
-  console.log(valueSearch)
+  let valueSearch = inputSearch.value.length;
+
+  if(valueSearch > 0) {
+    cardList.classList.remove('hidden-list');
+
+    fetch('https://api.banghasan.com/sholat/format/json/kota')
+      .then(response => response.json())
+      .then(response => {
+        const kota = response.kota;
+        let listKota = '';
+        kota.forEach( k => {
+          listKota += `<a href="#" id="nama-kota">${k.nama}</a><br>`;
+        });
+        const namaKota = document.getElementsByClassName('card-list')[0];
+        namaKota.innerHTML = listKota;
+        console.log(listKota)
+      });
+  } else {
+    cardList.classList.add('hidden-list');
+  }
+
 });
 
-getJadwalSholat();
+// getJadwalSholat();
