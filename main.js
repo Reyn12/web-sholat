@@ -22,8 +22,11 @@ function hari(){
 
 const tanggal = `${getYear}-${bulan()}-${hari()}`;
 
+const tampilKota = document.querySelector('.judul-kota');
+tampilKota.textContent = localStorage.judulkota
+
 function getJadwalSholat() {
-  fetch('https://api.banghasan.com/sholat/format/json/jadwal/kota/679/tanggal/' + tanggal)
+  fetch('https://api.banghasan.com/sholat/format/json/jadwal/kota/' + parseInt(localStorage.idkota) + '/tanggal/' + tanggal)
   .then(response => response.json())
   .then(data => {
     const jadwal = data.jadwal.data;
@@ -54,17 +57,35 @@ inputSearch.addEventListener('keyup',function(){
       .then(response => {
         const kota = response.kota;
         let listKota = '';
-        kota.forEach( k => {
-          listKota += `<a href="#" id="nama-kota">${k.nama}</a><br>`;
-        });
+       
         const namaKota = document.getElementsByClassName('card-list')[0];
+        kota.forEach(kota => {
+          const filterText = inputSearch.value.toLowerCase();
+          const itemText = kota.nama.toLowerCase();
+          if(itemText.indexOf(filterText) != -1){
+            listKota += `<a href="#" data-idkota="${kota.id}" id="nama-kota">${kota.nama}</a><br>`;
+          }
+        });
         namaKota.innerHTML = listKota;
-        console.log(listKota)
+
+        const isiKota = document.querySelectorAll('#nama-kota');
+        isiKota.forEach( kota => {
+          kota.addEventListener('click', function(){
+            console.log('kota')
+            const idkota = this.dataset.idkota;
+            const judulkota = this.textContent;
+            window.localStorage.setItem('idkota', idkota);
+            window.localStorage.setItem('judulkota', judulkota);
+            namaKota.classList.add('hidden-list');
+            inputSearch.value = '';
+            location.reload();
+          })
+        });
+        // console.log(kota)
       });
   } else {
     cardList.classList.add('hidden-list');
   }
-
 });
 
-// getJadwalSholat();
+getJadwalSholat();
